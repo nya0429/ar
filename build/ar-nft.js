@@ -775,7 +775,9 @@ function load(msg) {
             nftMarkerUrl = msg.marker;
         } else if (reM == false) {
             nftMarkerUrl = basePath + '/' + msg.marker;
-        }
+		}
+		
+		console.log(nftMakerUrl);
         ar.loadNFTMarker(nftMarkerUrl, function (markerId) {
 			console.log(nftMakerUrl);
             ar.trackNFTMarkerId(markerId);
