@@ -777,6 +777,7 @@ function load(msg) {
             nftMarkerUrl = basePath + '/' + msg.marker;
         }
         ar.loadNFTMarker(nftMarkerUrl, function (markerId) {
+			console.log(nftMakerUrl);
             ar.trackNFTMarkerId(markerId);
             postMessage({ type: 'endLoading' })
         }, function (err) {
@@ -1040,7 +1041,7 @@ ARjs.Context = THREEx.ArToolkitContext = function (parameters, sourceParameters)
         matrixCodeType: '3x3',
 
         // url of the camera parameters
-        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + './data/data/camera_para.dat',
+        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
 
         // tune the maximum rate of pose detection in the source image
         maxDetectionRate: 60,
@@ -1352,12 +1353,12 @@ ARjs.Profile.prototype.reset = function () {
     }
 
     this.contextParameters = {
-        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + './data/data/camera_para.dat',
+        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
         detectionMode: 'mono',
     }
     this.defaultMarkerParameters = {
         type: 'pattern',
-        patternUrl: THREEx.ArToolkitContext.baseURL + './data/data/patt.hiro',
+        patternUrl: THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro',
         changeMatrixMode: 'modelViewMatrix',
     }
     return this
@@ -1412,7 +1413,7 @@ ARjs.Profile.prototype.defaultMarker = function (trackingBackend) {
     if (trackingBackend === 'artoolkit') {
         this.contextParameters.detectionMode = 'mono'
         this.defaultMarkerParameters.type = 'pattern'
-        this.defaultMarkerParameters.patternUrl = THREEx.ArToolkitContext.baseURL + './data/data/patt.hiro'
+        this.defaultMarkerParameters.patternUrl = THREEx.ArToolkitContext.baseURL + '../data/data/patt.hiro'
     } else console.assert(false)
 
     return this
