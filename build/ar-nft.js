@@ -779,7 +779,7 @@ function load(msg) {
 		
 		console.log(nftMarkerUrl);
         ar.loadNFTMarker(nftMarkerUrl, function (markerId) {
-			console.log(nftMakerUrl);
+			console.log(nftMarkerUrl);
             ar.trackNFTMarkerId(markerId);
             postMessage({ type: 'endLoading' })
         }, function (err) {
