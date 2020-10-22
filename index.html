@@ -5,7 +5,7 @@
 <script src='vendor/three.js/build/three.min.js'></script>
 <!-- three.js load GLTF -->
 <script src='vendor/three.js/GLTFLoader.js'></script>
-<script src='build/ar-nft.js'></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/3.1.0/three.js/build/ar.js"></script>
 <script>THREEx.ArToolkitContext.baseURL = './'</script>
 
 <body style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin : 0px; overflow: hidden;'>
@@ -152,7 +152,7 @@
         // init controls for camera
         var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
             type : 'nft',
-            descriptorsUrl : 'data/dataNFT/pinball',
+            descriptorsUrl : 'data/dataNFT/rds_050',
             changeMatrixMode: 'cameraTransformMatrix'
         })
 
@@ -165,32 +165,16 @@
         //		add an object in the scene
         //////////////////////////////////////////////////////////////////////////////////
 
+        var geometry = new THREE.PlaneGeometry( 100, 100);
+        var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+        var plane = new THREE.Mesh( geometry, material );
+        root.add( plane );
+
         var threeGLTFLoader = new THREE.GLTFLoader();
         var model;
 
-        threeGLTFLoader.load("./resources/Flamingo.glb", function (gltf) {
-            model = gltf.scene.children[0];
-            model.name = 'Flamingo';
 
-            var animation = gltf.animations[0];
-            var mixer = new THREE.AnimationMixer(model);
-            mixers.push(mixer);
-            var action = mixer.clipAction(animation);
-            action.play();
-
-            root.matrixAutoUpdate = false;
-            root.add(model);
-
-            model.position.z = -200;
-            model.position.x = 100;
-            model.position.y = 100;
-
-
-            //////////////////////////////////////////////////////////////////////////////////
-            //		render the whole thing on the page
-            //////////////////////////////////////////////////////////////////////////////////
-
-            var animate = function() {
+        var animate = function() {
                 requestAnimationFrame(animate);
 
                 if (mixers.length > 0) {
@@ -209,10 +193,33 @@
                 scene.visible = camera.visible;
 
                 renderer.render(scene, camera);
-            };
-
-            requestAnimationFrame(animate);
         }
-    );
+
+        requestAnimationFrame(animate);
+
+
+        // threeGLTFLoader.load("./resources/Flamingo.glb", function (gltf) {
+        //     model = gltf.scene.children[0];
+        //     model.name = 'Flamingo';
+
+        //     var animation = gltf.animations[0];
+        //     var mixer = new THREE.AnimationMixer(model);
+        //     mixers.push(mixer);
+        //     var action = mixer.clipAction(animation);
+        //     action.play();
+
+        //     root.matrixAutoUpdate = false;
+        //     root.add(model);
+
+        //     model.position.z = -200;
+        //     model.position.x = 100;
+        //     model.position.y = 100;
+
+
+        //     //////////////////////////////////////////////////////////////////////////////////
+        //     //		render the whole thing on the page
+        //     //////////////////////////////////////////////////////////////////////////////////
+
+        // }
     </script>
 </body>
