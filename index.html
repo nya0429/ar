@@ -130,23 +130,24 @@
         function onResize(){
 
             arToolkitSource.onResizeElement()
-            renderer.setSize(window.innerWidth,window.innerHeight)
+            arToolkitSource.copyElementSizeTo(renderer.domElement)
+            // renderer.setSize(window.innerWidth,window.innerHeight)
 
-            renderer.setScissor(0,0,window.innerWidth,window.innerHeight)
-            let srcAspect = width/height
-            let srcWidth = window.innerWidth
-            let srcHeight = window.innerHeight
-            let aspect = srcWidth/srcHeight
+            // renderer.setScissor(0,0,window.innerWidth,window.innerHeight)
+            // let srcAspect = width/height
+            // let srcWidth = window.innerWidth
+            // let srcHeight = window.innerHeight
+            // let aspect = srcWidth/srcHeight
 
-            let vp = new THREE.Vector4()
-            if(aspect<srcAspect){
-               let w = srcAspect * srcHeight;
-               vp.set(-(w-srcWidth)/2,0,w,srcHeight)
-            }else{
-               let h = 1 / (srcAspect/srcWidth)
-               vp.set(0,-(h-srcHeight)/2,srcWidth,h)
-            }
-            renderer.setViewport(vp);
+            // let vp = new THREE.Vector4()
+            // if(aspect<srcAspect){
+            //    let w = srcAspect * srcHeight;
+            //    vp.set(-(w-srcWidth)/2,0,w,srcHeight)
+            // }else{
+            //    let h = 1 / (srcAspect/srcWidth)
+            //    vp.set(0,-(h-srcHeight)/2,srcWidth,h)
+            // }
+            // renderer.setViewport(vp);
 
             if( arToolkitContext.arController !== null ){
                 arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
