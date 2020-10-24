@@ -238,11 +238,11 @@
 
         var cylinder = new THREE.CylinderGeometry(150, 150, 100, 32, 1, true);
 
-        var texture = new THREE.TextureLoader().load("./data/images/nowconnecting.png");
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.repeat.set(2,1)
+        //var texture = new THREE.TextureLoader().load("./data/images/nowconnecting.png");
+        //texture.wrapS = THREE.RepeatWrapping;
+        //texture.repeat.set(2,1)
         var mat = new THREE.MeshBasicMaterial({
-            map:texture,
+            //map:texture,
             side:THREE.DoubleSide,
             blending:THREE.AdditiveBlending,
             transparent:true,
@@ -265,11 +265,11 @@
 
             if(!camera.visible){
                 lost ++;
-                console.log("marker invisible")
+                //console.log("marker invisible")
             }else{
                 lost = 0;
                 scene.visible = true;
-                console.log("marker visible")
+                //console.log("marker visible")
             }
 
             if(lost > 4){
