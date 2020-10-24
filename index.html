@@ -62,7 +62,8 @@
 
         console.log = ((logTextAreaArgument) => {
         let logTextArea = logTextAreaArgument;
-        return text => logTextArea.value = text;
+        return text => 
+        logTextArea.value = text.type;
         })(document.getElementsByClassName('log')[0]);
 
         console.log('init');
@@ -191,7 +192,7 @@
         // init controls for camera
         var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
             type : 'nft',
-            descriptorsUrl : '/ar/data/dataNFT/rds_050',
+            descriptorsUrl : '/ar/data/dataNFT/pinball',
             //descriptorsUrl : './data/dataNFT/rds_050',
             changeMatrixMode: 'cameraTransformMatrix'
         })
@@ -208,56 +209,56 @@
 
         var plane = new THREE.PlaneGeometry(200,200)
         var material = new THREE.MeshBasicMaterial({
-            transparent:true,
-            opacity:0.0,
+            //transparent:true,
+            //opacity:0.0,
         });
         var marker = new THREE.Mesh( plane, material );
         marker.rotateX(-Math.PI/2)
         marker.renderOrder = 1;
         root.add( marker );
 
-        var sqLength = 100;
-        var squareShape = new THREE.Shape()
-            .moveTo( sqLength, sqLength )
-            .lineTo( sqLength, -sqLength )
-            .lineTo( -sqLength, -sqLength )
-            .lineTo( -sqLength, sqLength )
-            .lineTo( sqLength, sqLength );
+        // var sqLength = 100;
+        // var squareShape = new THREE.Shape()
+        //     .moveTo( sqLength, sqLength )
+        //     .lineTo( sqLength, -sqLength )
+        //     .lineTo( -sqLength, -sqLength )
+        //     .lineTo( -sqLength, sqLength )
+        //     .lineTo( sqLength, sqLength );
 
-        var geo = new THREE.BufferGeometry().setFromPoints(squareShape.getPoints())
-        var line = new THREE.LineBasicMaterial({
-            color: 0x8fffee,
-            linewidth: 30,
-            blending:THREE.AdditiveBlending,
-            transparent:true,
-            depthWrite:false,
-        });
-        var line = new THREE.Line( geo, line );
-        line.rotateX(-Math.PI/2)
-        root.add(line)
+        // var geo = new THREE.BufferGeometry().setFromPoints(squareShape.getPoints())
+        // var line = new THREE.LineBasicMaterial({
+        //     color: 0x8fffee,
+        //     linewidth: 30,
+        //     blending:THREE.AdditiveBlending,
+        //     transparent:true,
+        //     depthWrite:false,
+        // });
+        // var line = new THREE.Line( geo, line );
+        // line.rotateX(-Math.PI/2)
+        // root.add(line)
 
-        var cylinder = new THREE.CylinderGeometry(150, 150, 100, 32, 1, true);
+        // var cylinder = new THREE.CylinderGeometry(150, 150, 100, 32, 1, true);
 
-        //var texture = new THREE.TextureLoader().load("./data/images/nowconnecting.png");
-        //texture.wrapS = THREE.RepeatWrapping;
-        //texture.repeat.set(2,1)
-        var mat = new THREE.MeshBasicMaterial({
-            //map:texture,
-            side:THREE.DoubleSide,
-            blending:THREE.AdditiveBlending,
-            transparent:true,
-            depthWrite:false,
-        })
+        // //var texture = new THREE.TextureLoader().load("./data/images/nowconnecting.png");
+        // //texture.wrapS = THREE.RepeatWrapping;
+        // //texture.repeat.set(2,1)
+        // var mat = new THREE.MeshBasicMaterial({
+        //     //map:texture,
+        //     side:THREE.DoubleSide,
+        //     blending:THREE.AdditiveBlending,
+        //     transparent:true,
+        //     depthWrite:false,
+        // })
 
-        var effect = new THREE.Mesh(cylinder,mat)
-        effect.rotateX(-Math.PI/2)
-        root.add(effect)
+        // var effect = new THREE.Mesh(cylinder,mat)
+        // effect.rotateX(-Math.PI/2)
+        // root.add(effect)
 
-        root.add(new THREE.AxesHelper( 200 ))
+        // root.add(new THREE.AxesHelper( 200 ))
 
         var animate = function() {
 
-            effect.rotateY(0.03);
+            //effect.rotateY(0.03);
 
             if (arToolkitSource.ready) {
           
