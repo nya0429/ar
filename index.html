@@ -56,6 +56,17 @@
         <div class="arjs-loader-spinner"></div>
     </div>
 
+    <textarea name="log" class="log" rows="10" cols="50" disabled></textarea>
+
+    <script type="text/javascript">
+      console.log = ((logTextAreaArgument) => {
+        let logTextArea = logTextAreaArgument;
+        return text => logTextArea.value+=text+'\n';
+      })(document.getElementsByClassName('log')[0]);
+
+      console.log('test');
+    </script>
+
     <script>
         //////////////////////////////////////////////////////////////////////////////////
         //		Init
