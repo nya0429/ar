@@ -2,14 +2,13 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
 <!-- three.js library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-nft.js"></script>
 
-<!-- github用 -->
-<!-- <script src="./build/ar-nft.js"></script> -->
+<!-- github -->
 <script>THREEx.ArToolkitContext.baseURL = 'https://nya0429.github.io/ar/data/'</script>
 
-<!-- ローカルで動くパス -->
-<script src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-nft.js"></script>
+<!-- local -->
 <!-- <script>THREEx.ArToolkitContext.baseURL = '../'</script> -->
 
 <body style='position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin : 0px; overflow: hidden;'>
@@ -69,18 +68,18 @@
 
         var clock = new THREE.Clock();
         var count = 0;
-
-        //var mixers = [];
+        var lost = 0;
 
         renderer.setPixelRatio(window.devicePixelRatio);
 
         renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        //renderer.setSize(480, 640 );
-
+        renderer.setSize( window.innerWidth, window.innerHeight)
+        
         renderer.domElement.style.position = 'absolute'
         renderer.domElement.style.top = '0px'
         renderer.domElement.style.left = '0px'
+        renderer.domElement.globalCompositeOperation = 'lighter';
+        renderer.setScissorTest(true)
         document.body.appendChild( renderer.domElement );
 
         // init scene and camera
@@ -101,17 +100,20 @@
         //          handle arToolkitSource
         ////////////////////////////////////////////////////////////////////////////////
 
+        var width = 640;
+        var height = 480;
+
         var arToolkitSource = new THREEx.ArToolkitSource({
             sourceType : 'webcam',
-            sourceWidth: 480,
-            sourceHeight: 640,
+            sourceWidth: width,
+            sourceHeight: height,
         })
 
         arToolkitSource.init(function onReady(){
             // use a resize to fullscreen mobile devices
             setTimeout(function() {
                 onResize()
-            }, 1000);
+            }, 2000);
         })
 
         // handle resize
@@ -126,16 +128,29 @@
 
         function onResize(){
 
-            arToolkitSource.onResizeElement()            
-            arToolkitSource.copyElementSizeTo(renderer.domElement)
-            //console.log(arToolkitSource.domElement.style.width)
-            //renderer.setSize(parseInt(arToolkitSource.domElement.style.width),parseInt(arToolkitSource.domElement.style.height),true)
-            //renderer.domElement.style.marginLeft = arToolkitSource.domElement.style.marginLeft;
-            //renderer.domElement.style.marginTop = arToolkitSource.domElement.style.marginTop;
-           
-            if( arToolkitContext.arController !== null ){
-                 arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+            arToolkitSource.onResizeElement()
+            renderer.setSize(window.innerWidth,window.innerHeight)
+
+            renderer.setScissor(0,0,window.innerWidth,window.innerHeight)
+            let srcAspect = width/height
+            let srcWidth = window.innerWidth
+            let srcHeight = window.innerHeight
+            let aspect = srcWidth/srcHeight
+
+            let vp = new THREE.Vector4()
+            if(aspect<srcAspect){
+               let w = srcAspect * srcHeight;
+               vp.set(-(w-srcWidth)/2,0,w,srcHeight)
+            }else{
+               let h = 1 / (srcAspect/srcWidth)
+               vp.set(0,-(h-srcHeight)/2,srcWidth,h)
             }
+            renderer.setViewport(vp);
+
+            if( arToolkitContext.arController !== null ){
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+            }
+
         }
 
         ////////////////////////////////////////////////////////////////////////////////
@@ -145,11 +160,11 @@
         // create atToolkitContext
         var arToolkitContext = new THREEx.ArToolkitContext({
             detectionMode: 'color',
-            canvasWidth: 480,
-            canvasHeight: 640,
+            canvasWidth: width,
+            canvasHeight: height,
         }, {
-            sourceWidth: 480,
-            sourceHeight: 640,
+            sourceWidth: width,
+            sourceHeight: height,
         })
 
         // initialize it
@@ -174,48 +189,78 @@
 
         var root = new THREE.Object3D();
         scene.add(root);
+        root.position.set(100,0,-100)
 
         //////////////////////////////////////////////////////////////////////////////////
         //		add an object in the scene
         //////////////////////////////////////////////////////////////////////////////////
 
-        var geometry = new THREE.BoxGeometry( 100, 100,　100);
-        var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
-        var box = new THREE.Mesh( geometry, material );
-        root.add( box );
+        //var plane = new THREE.PlaneGeometry(200,200)
+        var plane = new THREE.BoxGeometry(200,10,200)
+        var material = new THREE.MeshBasicMaterial({
+            transparent:true,
+            opacity:0.0,
+        });
+        var marker = new THREE.Mesh( plane, material );
+        //marker.rotateX(-Math.PI/2)
+        marker.renderOrder = 1;
+        root.add( marker );
 
-        var gridHelper = new THREE.GridHelper(200, 50);  // 引数は サイズ、1つのグリッドの大きさ
-        root.add(gridHelper);
 
-        // axisHelper
-        axisHelper = new THREE.AxisHelper(1000);  // 引数は 軸のサイズ
-        root.add(axisHelper);
+        var cylinder = new THREE.CylinderGeometry(150, 150, 100, 32, 1, true);
+
+        var texture = new THREE.TextureLoader().load("./data/images/nowconnecting.png");
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.repeat.set(2,1)
+        var mat = new THREE.MeshBasicMaterial({
+            map:texture,
+            side:THREE.DoubleSide,
+            blending:THREE.AdditiveBlending,
+            transparent:true,
+            depthWrite:false,
+        })
+
+        var effect = new THREE.Mesh(cylinder,mat)
+        effect.rotateX(-Math.PI/2)
+        root.add(effect);
 
         var animate = function() {
-                requestAnimationFrame(animate);
 
-                if (!arToolkitSource.ready) {
-                    return;
-                }
+            effect.rotateY(0.03);
 
-                arToolkitContext.update( arToolkitSource.domElement )
+            if (arToolkitSource.ready) {
+          
+            arToolkitContext.update( arToolkitSource.domElement )
 
-                scene.visible = camera.visible;
-                renderer.render(scene, camera);
+            if(!camera.visible){
+                lost ++;
+            }else{
+                lost = 0;
+                scene.visible = true;
+            }
 
-                if(camera.visible){
-                    count++
-                }else{
-                    count = 0;
-                }
+            if(lost > 4){
+                scene.visible = false;
+            }
 
-                if(count > 10){
-                    location.href="./artwork.html";
-                }
+            renderer.render(scene, camera);
+
+            if(camera.visible){
+                count++
+            }else{
+                count = 0;
+            }
+
+            if(count > 10){
+                location.href="./artwork.html";
+            }
+
+        }
+            requestAnimationFrame(animate);
 
         }
 
-        requestAnimationFrame(animate);
+        animate();
 
     </script>
 </body>
