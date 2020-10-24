@@ -243,7 +243,7 @@
         effect.rotateX(-Math.PI/2)
         root.add(effect)
 
-        //root.add(new THREE.AxesHelper( 200 ))
+        root.add(new THREE.AxesHelper( 200 ))
 
         var animate = function() {
 
@@ -272,11 +272,11 @@
                 count = 0;
             }
 
-            if(count > 10){
-                location.href="./artwork.html";
-            }
+            // if(count > 10){
+            //     location.href="./artwork.html";
+            // }
 
-        }
+            }
             requestAnimationFrame(animate);
 
         }
